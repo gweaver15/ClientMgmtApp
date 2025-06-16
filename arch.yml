@@ -1,0 +1,122 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS architecture for a client management application.
+
+Parameters:
+  DBUsername:
+    Type: String
+    Default: admin
+  DBPassword:
+    Type: String
+    NoEcho: true
+  S3BucketName:
+    Type: String
+
+Resources:
+
+  ### S3 Bucket for Frontend ###
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Ref S3BucketName
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        
+  ### Cognito User Pool ###
+  UserPool:
+    Type: AWS::Cognito::UserPool
+    Properties:
+      UserPoolName: clientAppUserPool
+      AutoVerifiedAttributes:
+        - email
+
+  ### IAM Role for Lambda ###
+  LambdaExecutionRole:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: clientAppLambdaExecutionRole
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: lambda.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole
+        - arn:aws:iam::aws:policy/AmazonRDSFullAccess
+
+  ### Lambda Function ###
+  ClientAppLambda:
+    Type: AWS::Lambda::Function
+    Properties:
+      FunctionName: clientAppHandler
+      Runtime: nodejs20.x
+      Handler: index.handler
+      Role: !GetAtt LambdaExecutionRole.Arn
+      Code:
+        ZipFile: |
+          exports.handler = async (event) => {
+            return {
+              statusCode: 200,
+              body: JSON.stringify({ message: "Client App API working!" })
+            };
+          };
+
+  ### API Gateway ###
+  ClientApi:
+    Type: AWS::ApiGateway::RestApi
+    Properties:
+      Name: clientAppApi
+
+  ClientApiResource:
+    Type: AWS::ApiGateway::Resource
+    Properties:
+      ParentId: !GetAtt ClientApi.RootResourceId
+      PathPart: client
+      RestApiId: !Ref ClientApi
+
+  ClientApiMethod:
+    Type: AWS::ApiGateway::Method
+    Properties:
+      AuthorizationType: NONE
+      HttpMethod: GET
+      ResourceId: !Ref ClientApiResource
+      RestApiId: !Ref ClientApi
+      Integration:
+        IntegrationHttpMethod: POST
+        Type: AWS_PROXY
+        Uri: 
+          Fn::Sub: 
+            - arn:aws:apigateway:${AWS::Region}:lambda:path/2015-03-31/functions/${LambdaArn}/invocations
+            - LambdaArn: !GetAtt ClientAppLambda.Arn
+
+  LambdaApiPermission:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName: !Ref ClientAppLambda
+      Action: lambda:InvokeFunction
+      Principal: apigateway.amazonaws.com
+      SourceArn: !Sub arn:aws:execute-api:${AWS::Region}:${AWS::AccountId}:${ClientApi}/*/*/*
+
+  ### RDS (PostgreSQL) ###
+  ClientAppDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier: clientapp-db
+      AllocatedStorage: 20
+      DBInstanceClass: db.t3.micro
+      Engine: postgres
+      MasterUsername: !Ref DBUsername
+      MasterUserPassword: !Ref DBPassword
+      BackupRetentionPeriod: 7
+      PubliclyAccessible: false
+      MultiAZ: false
+
+Outputs:
+  FrontendBucketURL:
+    Description: S3 Bucket Website URL
+    Value: !GetAtt FrontendBucket.WebsiteURL
+
+  APIEndpoint:
+    Description: API Gateway Endpoint
+    Value: !Sub https://${ClientApi}.execute-api.${AWS::Region}.amazonaws.com/prod/client
