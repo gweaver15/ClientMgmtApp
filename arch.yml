@@ -27,11 +27,12 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: !Sub "${S3BucketName}-backend"
-      AccessControl: Private
         
   ### Cognito User Pool ###
   UserPool:
     Type: AWS::Cognito::UserPool
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
     Properties:
       UserPoolName: clientAppUserPool
       AutoVerifiedAttributes:
@@ -117,7 +118,7 @@ Resources:
       DBInstanceClass: db.t3.micro
       Engine: postgres
       MasterUsername: !Ref DBUsername
-      MasterUserPassword: '{{resolve:secretsmanager:my-db-secret:SecretString:password}}'
+      MasterUserPassword: !Ref DBPassword
       BackupRetentionPeriod: 7
       PubliclyAccessible: false
       MultiAZ: false
