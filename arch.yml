@@ -8,6 +8,7 @@ Parameters:
   DBPassword:
     Type: String
     NoEcho: true
+    Default: test
   S3BucketName:
     Type: String
     Default: client-app-bucket
