@@ -10,16 +10,23 @@ Parameters:
     NoEcho: true
   S3BucketName:
     Type: String
+    Default: client-app-bucket
 
 Resources:
 
-  ### S3 Bucket for Frontend ###
+  ### S3 Buckets ###
   FrontendBucket:
     Type: AWS::S3::Bucket
     Properties:
-      BucketName: !Ref S3BucketName
+      BucketName: !Sub "${S3BucketName}-frontend"
       WebsiteConfiguration:
         IndexDocument: index.html
+
+  BackendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "${S3BucketName}-backend"
+      AccessControl: Private
         
   ### Cognito User Pool ###
   UserPool:
@@ -92,6 +99,8 @@ Resources:
 
   LambdaApiPermission:
     Type: AWS::Lambda::Permission
+    UpdateReplacePolicy: Retain
+    DeletionPolicy: Retain
     Properties:
       FunctionName: !Ref ClientAppLambda
       Action: lambda:InvokeFunction
@@ -107,7 +116,7 @@ Resources:
       DBInstanceClass: db.t3.micro
       Engine: postgres
       MasterUsername: !Ref DBUsername
-      MasterUserPassword: !Ref DBPassword
+      MasterUserPassword: '{{resolve:secretsmanager:my-db-secret:SecretString:password}}'
       BackupRetentionPeriod: 7
       PubliclyAccessible: false
       MultiAZ: false
