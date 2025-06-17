@@ -112,6 +112,8 @@ Resources:
   ### RDS (PostgreSQL) ###
   ClientAppDB:
     Type: AWS::RDS::DBInstance
+    DeletionPolicy: Delete
+    UpdateReplacePolicy: Delete
     Properties:
       DBInstanceIdentifier: clientapp-db
       AllocatedStorage: 20
