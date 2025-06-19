@@ -1,0 +1,124 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #f0f2f5, #e6effa);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background: white;
+  padding: 2em;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  width: 100%;
+  max-width: 360px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.header {
+  margin-bottom: 1.5em;
+}
+
+.logo {
+  width: 64px;
+  height: 64px;
+  margin-bottom: 0.5em;
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.5em;
+}
+
+p {
+  margin: 0.25em 0 1em;
+  color: #666;
+}
+
+label {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  margin: 0.75em 0 0.25em;
+}
+
+input {
+  width: 100%;
+  padding: 0.75em;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+
+button {
+  width: 100%;
+  padding: 0.75em;
+  margin-top: 1em;
+  background-color: #0073bb;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #005e99;
+}
+
+button:disabled {
+  background-color: #7aa7cb;
+  cursor: not-allowed;
+}
+
+.spinner {
+  margin: 1em auto 0;
+  width: 24px;
+  height: 24px;
+  border: 3px solid #ccc;
+  border-top-color: #0073bb;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+#message {
+  margin-top: 1em;
+  color: red;
+  font-size: 0.9em;
+}
+
+.links {
+  margin-top: 1.5em;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.links a {
+  color: #0073bb;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+.links a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  margin-top: 2em;
+  font-size: 0.8em;
+  color: #999;
+}
+
+.hidden {
+  display: none;
+}
