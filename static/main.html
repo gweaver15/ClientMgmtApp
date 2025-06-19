@@ -8,12 +8,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Auth - MyApp</title>
   <link rel="stylesheet" href="style.css"/>
-  <script src="https://cdn.jsdelivr.net/npm/aws-amplify@5.0.4/dist/aws-amplify.min.js"></script>
 </head>
 <body>
     <div class="container">
         <div class="header">
-            <img src="logo.png" alt="MyApp Logo" class="logo" />
+            <img src="" alt="MyApp Logo" class="logo" />
             <h1 id="formTitle">Welcome Back</h1>
             <p id="formSubtitle">Please sign in to continue</p>
         </div>
@@ -46,6 +45,17 @@
             <button type="submit">Sign Up</button>
         </form>
 
+        <!-- Confirmation Form -->
+        <form id="confirmForm" class="hidden">
+          <label for="confirmUsername">Username</label>
+          <input type="text" id="confirmUsername" required />
+
+          <label for="confirmCode">Confirmation Code</label>
+          <input type="text" id="confirmCode" required />
+
+          <button type="submit">Confirm Account</button>
+        </form>
+
         <div class="links">
             <a href="#" id="toggleModeLink">Don't have an account? Sign Up</a>
         </div>
@@ -57,6 +67,7 @@
         </footer>
     </div>
 
-  <script src="index.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/aws-amplify@4.3.24/dist/aws-amplify.min.js"></script>
+    <script src="index.js"></script>
 </body>
 </html>
