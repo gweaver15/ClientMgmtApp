@@ -2,4 +2,4 @@
 
 Intended for use by various types of firms for tracking, reaching, and assisting clients
 
-![alt text][./Arch.drawio]
+![alt text][./arch.drawio.png]
