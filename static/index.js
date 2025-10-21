@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function () {
     e.preventDefault();
     const username = document.getElementById('signInUsername').value;
     const password = document.getElementById('signInPassword').value;
+    const pass = document.getElementById('signInPassword')
     message.textContent = '';
     try {
       await Auth.signIn(username, password);
@@ -52,6 +53,8 @@ document.addEventListener('DOMContentLoaded', function () {
       // Redirect or update UI as needed
     } catch (err) {
       message.textContent = err.message || 'Sign in failed.';
+      pass.value = '';
+      pass.focus();
     }
   });
 
