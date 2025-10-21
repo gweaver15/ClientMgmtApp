@@ -122,3 +122,9 @@ footer {
 .hidden {
   display: none;
 }
+
+.password-hint {
+  font-size: 0.9rem;
+  color: #666;
+  margin-top: 0.25rem;
+}
