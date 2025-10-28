@@ -49,6 +49,9 @@ document.addEventListener('DOMContentLoaded', function () {
     try {
       await Auth.signIn(username, password);
       message.textContent = 'Sign in successful!';
+      const user = await Auth.currentAuthenticatedUser();
+      const userId = user.attributes.sub;
+      localStorage.setItem("userId", userId);
       window.location.href = "clientlist.html";
       // Redirect or update UI as needed
     } catch (err) {
@@ -102,4 +105,13 @@ document.addEventListener('DOMContentLoaded', function () {
       message.textContent = err.message || 'Confirmation failed.';
     }
   });
+});
+
+signOutBtn.addEventListener('click', function () {
+  Auth.signOut()
+    .then(() => {
+      localStorage.removeItem("userId");
+      window.location.href = "main.html";
+    })
+    .catch(err => console.log(err));
 });

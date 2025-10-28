@@ -32,6 +32,16 @@ body {
   overflow: auto;
 }
 
+#signOutBtn {
+  margin-top: 1em;
+  background: none;
+  border: none;
+  color: #0073bb;
+  cursor: pointer;
+  font-size: 0.9em;
+  text-decoration: underline;
+}
+
 .header {
   margin-bottom: 1.5em;
 }
